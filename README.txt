@@ -11,6 +11,9 @@ streamlit run app.py
 
 
 
+streamlit
+selenium
+webdriver-manager
 
 
 
