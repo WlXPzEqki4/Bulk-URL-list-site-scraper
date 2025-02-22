@@ -6565,7 +6565,7 @@ import zipfile
 
 # Import your scrapers
 from scrapers.scraper_1 import run_scraper_1
-from scrapers.scraper_2 import run_scraper_2  # COMMENTED OUT Scraper 2
+# from scrapers.scraper_2 import run_scraper_2  # COMMENTED OUT Scraper 2
 from scrapers.scraper_3 import run_scraper_3  # COMMENTED OUT Scraper 3
 from scrapers.scraper_4 import run_scraper_4  # COMMENTED OUT Scraper 4
 from scrapers.scraper_5 import run_scraper_5
@@ -6634,8 +6634,8 @@ def main():
     # We store results/durations for each scraper plus a flag if they've run
     if "scraper_1_results" not in st.session_state:
         st.session_state["scraper_1_results"] = None
-    if "scraper_2_results" not in st.session_state:
-        st.session_state["scraper_2_results"] = None
+    # if "scraper_2_results" not in st.session_state:
+    #     st.session_state["scraper_2_results"] = None
     if "scraper_3_results" not in st.session_state:
         st.session_state["scraper_3_results"] = None
     if "scraper_4_results" not in st.session_state:
@@ -6647,8 +6647,8 @@ def main():
 
     if "scraper_1_duration" not in st.session_state:
         st.session_state["scraper_1_duration"] = 0.0
-    if "scraper_2_duration" not in st.session_state:
-        st.session_state["scraper_2_duration"] = 0.0
+    # if "scraper_2_duration" not in st.session_state:
+    #     st.session_state["scraper_2_duration"] = 0.0
     if "scraper_3_duration" not in st.session_state:
         st.session_state["scraper_3_duration"] = 0.0
     if "scraper_4_duration" not in st.session_state:
@@ -6840,32 +6840,32 @@ def main():
             )
 
         # ---------------- SCRAPER 2 (COMMENTED OUT) ----------------
-        if st.session_state["scraper_2_results"] is not None:
-            results_2 = st.session_state["scraper_2_results"]
-            st.markdown("## Scraper 2 Results (JS-rendered HTML)")
+        # if st.session_state["scraper_2_results"] is not None:
+        #     results_2 = st.session_state["scraper_2_results"]
+        #     st.markdown("## Scraper 2 Results (JS-rendered HTML)")
         
-            success_count_2 = sum(r["status"] == "success" for r in results_2)
-            fail_count_2 = sum(r["status"] == "failed" for r in results_2)
-            time_taken_2 = st.session_state.get("scraper_2_duration", 0.0)
+        #     success_count_2 = sum(r["status"] == "success" for r in results_2)
+        #     fail_count_2 = sum(r["status"] == "failed" for r in results_2)
+        #     time_taken_2 = st.session_state.get("scraper_2_duration", 0.0)
         
-            st.success(
-                f"Scraper 2 completed. Successfully scraped {success_count_2} of {len(results_2)} URLs. "
-                f"({fail_count_2} failed.)\n"
-                f"**Time Taken**: {time_taken_2:.2f} seconds."
-            )
+        #     st.success(
+        #         f"Scraper 2 completed. Successfully scraped {success_count_2} of {len(results_2)} URLs. "
+        #         f"({fail_count_2} failed.)\n"
+        #         f"**Time Taken**: {time_taken_2:.2f} seconds."
+        #     )
         
-            with st.expander("Detailed Results (Scraper 2)"):
-                for item in results_2:
-                    status_emoji = "✅" if item["status"] == "success" else "❌"
-                    error_text = f"**Error**: {item['error']}" if item['error'] else ""
-                    st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+        #     with st.expander("Detailed Results (Scraper 2)"):
+        #         for item in results_2:
+        #             status_emoji = "✅" if item["status"] == "success" else "❌"
+        #             error_text = f"**Error**: {item['error']}" if item['error'] else ""
+        #             st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
         
-            create_zip_and_download(
-                results_2,
-                folder_path=folder_path,
-                subfolder_name="2_Rendered_HTML_saved_webpages",
-                scraper_label="Scraper_2"
-            )
+        #     create_zip_and_download(
+        #         results_2,
+        #         folder_path=folder_path,
+        #         subfolder_name="2_Rendered_HTML_saved_webpages",
+        #         scraper_label="Scraper_2"
+        #     )
 
         # ---------------- SCRAPER 3 (COMMENTED OUT) ----------------
         if st.session_state["scraper_3_results"] is not None:
