@@ -6766,11 +6766,11 @@ def main():
                     st.session_state["scraper_1_duration"] = end_time_1 - start_time_1
 
                 # --- Scraper 2 (COMMENTED OUT) ---
-                if scraper_2_selected:
-                    start_time_2 = time.time()
-                    st.session_state["scraper_2_results"] = run_scraper_2(urls, folder_path)
-                    end_time_2 = time.time()
-                    st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
+                # if scraper_2_selected:
+                #     start_time_2 = time.time()
+                #     st.session_state["scraper_2_results"] = run_scraper_2(urls, folder_path)
+                #     end_time_2 = time.time()
+                #     st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
 
                 # --- Scraper 3 (COMMENTED OUT) ---
                 if scraper_3_selected:
