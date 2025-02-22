@@ -30,9 +30,9 @@ git push -u origin main
 
 
 
+(venv) jcdenton@JCDentons-MacBook-Air-2 Bulk_streamlit % python -m streamlit run app.py
 
-
-
+python -m streamlit run app.py
 
 
 

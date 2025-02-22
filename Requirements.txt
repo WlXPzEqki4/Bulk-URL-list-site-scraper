@@ -1,0 +1,4 @@
+streamlit
+selenium
+webdriver-manager
+# plus anything else you use: requests, beautifulsoup4, aiohttp, ...
