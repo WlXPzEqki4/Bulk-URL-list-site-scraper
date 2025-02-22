@@ -4639,6 +4639,488 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+# import streamlit as st
+# import os
+# import time
+# from io import BytesIO
+# import zipfile
+
+# # Import your scrapers
+# from scrapers.scraper_1 import run_scraper_1
+# from scrapers.scraper_2 import run_scraper_2
+# from scrapers.scraper_3 import run_scraper_3
+# from scrapers.scraper_4 import run_scraper_4
+# from scrapers.scraper_5 import run_scraper_5
+# from scrapers.scraper_6 import run_scraper_6  # NEW Scraper 6 (BeautifulSoup JSON)
+
+# # -------------------------------------------------
+# # 1) Custom CSS for button and download button styling
+# # -------------------------------------------------
+# def set_button_style():
+#     st.markdown(
+#         """
+#         <style>
+#         div.stButton > button,
+#         div.stDownloadButton > button {
+#             background-color: #003366 !important;  /* Dark Blue */
+#             color: white !important;
+#             border: none !important;
+#             padding: 0.45rem 0.85rem !important;
+#         }
+        
+#         div.stButton > button:hover,
+#         div.stDownloadButton > button:hover {
+#             background-color: #002244 !important;  /* Even darker on hover */
+#             color: white !important;
+#         }
+#         </style>
+#         """,
+#         unsafe_allow_html=True
+#     )
+
+# # -------------------------------------------------
+# # 2) Helper function to zip and provide download
+# # -------------------------------------------------
+# def create_zip_and_download(results, folder_path, subfolder_name, scraper_label):
+#     """
+#     Build a ZIP from the success items in `results`
+#     and provide a download button in Streamlit.
+
+#     For scrapers that produce multiple files per URL or JSON files,
+#     adapt as needed to gather those files or subfolders.
+#     """
+#     zip_buffer = BytesIO()
+#     with zipfile.ZipFile(zip_buffer, "w") as zf:
+#         for item in results:
+#             if item["status"] == "success" and item["filename"]:
+#                 file_path = os.path.join(folder_path, subfolder_name, item["filename"])
+#                 if os.path.exists(file_path):
+#                     # For JSON output, we simply zip the JSON file
+#                     zf.write(file_path, arcname=item["filename"])
+#     zip_buffer.seek(0)
+#     st.download_button(
+#         label=f"Download {scraper_label} Files (ZIP)",
+#         data=zip_buffer.getvalue(),
+#         file_name=f"{scraper_label}_files.zip",
+#         mime="application/zip"
+#     )
+
+# def main():
+#     # 1) Apply custom styles (buttons, etc.)
+#     set_button_style()
+
+#     st.title("Bulk URL list site scraper (HTML, JSON, PDF)")
+
+#     # -------------------------------------------------
+#     # 3) Session State Setup
+#     # -------------------------------------------------
+#     # We store results/durations for each scraper plus a flag if they've run
+#     if "scraper_1_results" not in st.session_state:
+#         st.session_state["scraper_1_results"] = None
+#     if "scraper_2_results" not in st.session_state:
+#         st.session_state["scraper_2_results"] = None
+#     if "scraper_3_results" not in st.session_state:
+#         st.session_state["scraper_3_results"] = None
+#     if "scraper_4_results" not in st.session_state:
+#         st.session_state["scraper_4_results"] = None
+#     if "scraper_5_results" not in st.session_state:
+#         st.session_state["scraper_5_results"] = None
+#     if "scraper_6_results" not in st.session_state:
+#         st.session_state["scraper_6_results"] = None
+
+#     if "scraper_1_duration" not in st.session_state:
+#         st.session_state["scraper_1_duration"] = 0.0
+#     if "scraper_2_duration" not in st.session_state:
+#         st.session_state["scraper_2_duration"] = 0.0
+#     if "scraper_3_duration" not in st.session_state:
+#         st.session_state["scraper_3_duration"] = 0.0
+#     if "scraper_4_duration" not in st.session_state:
+#         st.session_state["scraper_4_duration"] = 0.0
+#     if "scraper_5_duration" not in st.session_state:
+#         st.session_state["scraper_5_duration"] = 0.0
+#     if "scraper_6_duration" not in st.session_state:
+#         st.session_state["scraper_6_duration"] = 0.0
+
+#     if "scrapers_ran" not in st.session_state:
+#         st.session_state["scrapers_ran"] = False
+
+#     if "formatted_output" not in st.session_state:
+#         st.session_state["formatted_output"] = ""
+#     if "scraper_input" not in st.session_state:
+#         st.session_state["scraper_input"] = ""
+
+#     # -------------------------------------------------
+#     # 4) URL FORMATTING HELPER
+#     # -------------------------------------------------
+#     st.subheader("URL Formatting Helper")
+#     st.write("""
+#     If you have raw URLs (one per line) and want them in the form:
+#     ```
+#     "https://site1.com",
+#     "https://site2.org"
+#     ```
+#     paste them below and click **Format URLs**.
+#     """)
+
+#     raw_input = st.text_area(
+#         label="Paste raw URLs here (one per line):",
+#         placeholder="https://example.com\nhttps://another-site.org\n...",
+#         height=100
+#     )
+
+#     if st.button("Format URLs"):
+#         lines = [line.strip() for line in raw_input.strip().split("\n") if line.strip()]
+#         if lines:
+#             formatted_lines = []
+#             for i, line in enumerate(lines):
+#                 comma = "," if i < len(lines) - 1 else ""
+#                 formatted_lines.append(f"\"{line}\"{comma}")
+#             st.session_state["formatted_output"] = "\n".join(formatted_lines)
+#         else:
+#             st.warning("No valid URLs were detected to format.")
+#             st.session_state["formatted_output"] = ""
+
+#     if st.session_state["formatted_output"]:
+#         st.text_area(
+#             label="Formatted URLs:",
+#             value=st.session_state["formatted_output"],
+#             height=100,
+#             disabled=True
+#         )
+#         if st.button("Paste to Scraper"):
+#             st.session_state["scraper_input"] = st.session_state["formatted_output"]
+#             st.info("Formatted URLs have been pasted to the scraper input section below.")
+
+#     # -------------------------------------------------
+#     # 5) SCRAPER INPUT
+#     # -------------------------------------------------
+#     st.markdown("---")
+#     st.subheader("Scraper Input")
+#     st.write("""
+#     Paste your URLs here (comma- or newline-separated, or fully formatted).
+#     Choose your output folder and which scrapers to run.
+#     """)
+
+#     if not st.session_state["scrapers_ran"]:
+#         st.text_area(
+#             label="Paste URLs for Scraping:",
+#             height=150,
+#             key="scraper_input"
+#         )
+
+#         folder_path = st.text_input("Output folder path:", "my_output")
+
+#         st.markdown("### Select Scrapers")
+#         run_all = st.checkbox("Run ALL scrapers (default)", value=True)
+#         if run_all:
+#             scraper_1_selected = True
+#             scraper_2_selected = True
+#             scraper_3_selected = True
+#             scraper_4_selected = True
+#             scraper_5_selected = True
+#             scraper_6_selected = True
+#         else:
+#             scraper_1_selected = st.checkbox("Scraper 1 (Requests-based)", value=False)
+#             scraper_2_selected = st.checkbox("Scraper 2 (JS-rendered HTML)", value=False)
+#             scraper_3_selected = st.checkbox("Scraper 3 (PDF, Page.printToPDF)", value=False)
+#             scraper_4_selected = st.checkbox("Scraper 4 (PDF_2, print_page)", value=False)
+#             scraper_5_selected = st.checkbox("Scraper 5 (Async crawler, aiohttp)", value=False)
+#             scraper_6_selected = st.checkbox("Scraper 6 (BeautifulSoup to JSON)", value=False)
+
+#         if st.button("Start Scraping"):
+#             if not st.session_state["scraper_input"].strip():
+#                 st.warning("Please provide at least one URL.")
+#                 return
+
+#             raw_urls = st.session_state["scraper_input"].replace("\n", ",").split(",")
+#             urls = [u.strip().strip('"').strip("'") for u in raw_urls if u.strip()]
+#             if not urls:
+#                 st.warning("No valid URLs found.")
+#                 return
+
+#             os.makedirs(folder_path, exist_ok=True)
+
+#             with st.spinner("Scraping in progress..."):
+#                 # --- Scraper 1 ---
+#                 if scraper_1_selected:
+#                     start_time_1 = time.time()
+#                     st.session_state["scraper_1_results"] = run_scraper_1(urls, folder_path)
+#                     end_time_1 = time.time()
+#                     st.session_state["scraper_1_duration"] = end_time_1 - start_time_1
+
+#                 # --- Scraper 2 ---
+#                 if scraper_2_selected:
+#                     start_time_2 = time.time()
+#                     st.session_state["scraper_2_results"] = run_scraper_2(urls, folder_path)
+#                     end_time_2 = time.time()
+#                     st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
+
+#                 # --- Scraper 3 ---
+#                 if scraper_3_selected:
+#                     start_time_3 = time.time()
+#                     st.session_state["scraper_3_results"] = run_scraper_3(urls, folder_path)
+#                     end_time_3 = time.time()
+#                     st.session_state["scraper_3_duration"] = end_time_3 - start_time_3
+
+#                 # --- Scraper 4 ---
+#                 if scraper_4_selected:
+#                     start_time_4 = time.time()
+#                     st.session_state["scraper_4_results"] = run_scraper_4(urls, folder_path)
+#                     end_time_4 = time.time()
+#                     st.session_state["scraper_4_duration"] = end_time_4 - start_time_4
+
+#                 # --- Scraper 5 ---
+#                 if scraper_5_selected:
+#                     start_time_5 = time.time()
+#                     st.session_state["scraper_5_results"] = run_scraper_5(urls, folder_path)
+#                     end_time_5 = time.time()
+#                     st.session_state["scraper_5_duration"] = end_time_5 - start_time_5
+
+#                 # --- Scraper 6 ---
+#                 if scraper_6_selected:
+#                     start_time_6 = time.time()
+#                     st.session_state["scraper_6_results"] = run_scraper_6(urls, folder_path)
+#                     end_time_6 = time.time()
+#                     st.session_state["scraper_6_duration"] = end_time_6 - start_time_6
+
+#             st.session_state["scrapers_ran"] = True
+#             st.success("Scraping completed! Scroll down to see the results.")
+#     else:
+#         st.write("Scrapers have been run. Refresh the page if you need to start over.")
+
+#     # -------------------------------------------------
+#     # 6) DISPLAY RESULTS (if scrapers_ran)
+#     # -------------------------------------------------
+#     if st.session_state["scrapers_ran"]:
+#         folder_path = "my_output"
+
+#         # ---------------- SCRAPER 1 ----------------
+#         if st.session_state["scraper_1_results"] is not None:
+#             results_1 = st.session_state["scraper_1_results"]
+#             st.markdown("## Scraper 1 Results (Requests)")
+
+#             success_count_1 = sum(r["status"] == "success" for r in results_1)
+#             fail_count_1 = sum(r["status"] == "failed" for r in results_1)
+#             time_taken_1 = st.session_state.get("scraper_1_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 1 completed. Successfully scraped {success_count_1} of {len(results_1)} URLs. "
+#                 f"({fail_count_1} failed.)\n"
+#                 f"**Time Taken**: {time_taken_1:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 1)"):
+#                 for item in results_1:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             create_zip_and_download(
+#                 results_1,
+#                 folder_path=folder_path,
+#                 subfolder_name="1_HTML_saved_webpages",
+#                 scraper_label="Scraper_1"
+#             )
+
+#         # ---------------- SCRAPER 2 ----------------
+#         if st.session_state["scraper_2_results"] is not None:
+#             results_2 = st.session_state["scraper_2_results"]
+#             st.markdown("## Scraper 2 Results (JS-rendered HTML)")
+
+#             success_count_2 = sum(r["status"] == "success" for r in results_2)
+#             fail_count_2 = sum(r["status"] == "failed" for r in results_2)
+#             time_taken_2 = st.session_state.get("scraper_2_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 2 completed. Successfully scraped {success_count_2} of {len(results_2)} URLs. "
+#                 f"({fail_count_2} failed.)\n"
+#                 f"**Time Taken**: {time_taken_2:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 2)"):
+#                 for item in results_2:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             create_zip_and_download(
+#                 results_2,
+#                 folder_path=folder_path,
+#                 subfolder_name="2_Rendered_HTML_saved_webpages",
+#                 scraper_label="Scraper_2"
+#             )
+
+#         # ---------------- SCRAPER 3 ----------------
+#         if st.session_state["scraper_3_results"] is not None:
+#             results_3 = st.session_state["scraper_3_results"]
+#             st.markdown("## Scraper 3 Results (PDF, Page.printToPDF)")
+
+#             success_count_3 = sum(r["status"] == "success" for r in results_3)
+#             fail_count_3 = sum(r["status"] == "failed" for r in results_3)
+#             time_taken_3 = st.session_state.get("scraper_3_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 3 completed. Successfully scraped {success_count_3} of {len(results_3)} URLs. "
+#                 f"({fail_count_3} failed.)\n"
+#                 f"**Time Taken**: {time_taken_3:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 3)"):
+#                 for item in results_3:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             # ZIP Download for PDF subfolder "3_PDF_1"
+#             zip_buffer_3 = BytesIO()
+#             with zipfile.ZipFile(zip_buffer_3, "w") as zf:
+#                 for item in results_3:
+#                     if item["status"] == "success" and item["filename"]:
+#                         pdf_path = os.path.join(folder_path, "3_PDF_1", item["filename"])
+#                         if os.path.exists(pdf_path):
+#                             zf.write(pdf_path, arcname=item["filename"])
+#             zip_buffer_3.seek(0)
+
+#             st.download_button(
+#                 label="Download Scraper_3 PDFs (ZIP)",
+#                 data=zip_buffer_3.getvalue(),
+#                 file_name="scraper_3_pdfs.zip",
+#                 mime="application/zip"
+#             )
+
+#         # ---------------- SCRAPER 4 ----------------
+#         if st.session_state["scraper_4_results"] is not None:
+#             results_4 = st.session_state["scraper_4_results"]
+#             st.markdown("## Scraper 4 Results (PDF_2, print_page())")
+
+#             success_count_4 = sum(r["status"] == "success" for r in results_4)
+#             fail_count_4 = sum(r["status"] == "failed" for r in results_4)
+#             time_taken_4 = st.session_state.get("scraper_4_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 4 completed. Successfully scraped {success_count_4} of {len(results_4)} URLs. "
+#                 f"({fail_count_4} failed.)\n"
+#                 f"**Time Taken**: {time_taken_4:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 4)"):
+#                 for item in results_4:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             # ZIP Download of PDF subfolder "4_PDF_2"
+#             zip_buffer_4 = BytesIO()
+#             with zipfile.ZipFile(zip_buffer_4, "w") as zf:
+#                 for item in results_4:
+#                     if item["status"] == "success" and item["filename"]:
+#                         pdf_path = os.path.join(folder_path, "4_PDF_2", item["filename"])
+#                         if os.path.exists(pdf_path):
+#                             zf.write(pdf_path, arcname=item["filename"])
+#             zip_buffer_4.seek(0)
+
+#             st.download_button(
+#                 label="Download Scraper_4 PDFs (ZIP)",
+#                 data=zip_buffer_4.getvalue(),
+#                 file_name="scraper_4_pdfs.zip",
+#                 mime="application/zip"
+#             )
+
+#         # ---------------- SCRAPER 5 ----------------
+#         if st.session_state["scraper_5_results"] is not None:
+#             results_5 = st.session_state["scraper_5_results"]
+#             st.markdown("## Scraper 5 Results (Async crawler, aiohttp)")
+
+#             success_count_5 = sum(r["status"] == "success" for r in results_5)
+#             fail_count_5 = sum(r["status"] == "failed" for r in results_5)
+#             time_taken_5 = st.session_state.get("scraper_5_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 5 completed. Successfully scraped {success_count_5} of {len(results_5)} URLs. "
+#                 f"({fail_count_5} failed.)\n"
+#                 f"**Time Taken**: {time_taken_5:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 5)"):
+#                 for item in results_5:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             create_zip_and_download(
+#                 results_5,
+#                 folder_path=folder_path,
+#                 subfolder_name="5_crawl4ai_full",
+#                 scraper_label="Scraper_5"
+#             )
+
+#         # ---------------- SCRAPER 6 ----------------
+#         if st.session_state["scraper_6_results"] is not None:
+#             results_6 = st.session_state["scraper_6_results"]
+#             st.markdown("## Scraper 6 Results (BeautifulSoup to JSON)")
+
+#             success_count_6 = sum(r["status"] == "success" for r in results_6)
+#             fail_count_6 = sum(r["status"] == "failed" for r in results_6)
+#             time_taken_6 = st.session_state.get("scraper_6_duration", 0.0)
+
+#             st.success(
+#                 f"Scraper 6 completed. Successfully scraped {success_count_6} of {len(results_6)} URLs. "
+#                 f"({fail_count_6} failed.)\n"
+#                 f"**Time Taken**: {time_taken_6:.2f} seconds."
+#             )
+
+#             with st.expander("Detailed Results (Scraper 6)"):
+#                 for item in results_6:
+#                     status_emoji = "✅" if item["status"] == "success" else "❌"
+#                     error_text = f"**Error**: {item['error']}" if item['error'] else ""
+#                     st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+
+#             # Zip up the JSON files from '6_BeautifulSoup_json'
+#             zip_buffer_6 = BytesIO()
+#             with zipfile.ZipFile(zip_buffer_6, "w") as zf:
+#                 for item in results_6:
+#                     if item["status"] == "success" and item["filename"]:
+#                         json_path = os.path.join(folder_path, "6_BeautifulSoup_json", item["filename"])
+#                         if os.path.exists(json_path):
+#                             zf.write(json_path, arcname=item["filename"])
+#             zip_buffer_6.seek(0)
+
+#             st.download_button(
+#                 label="Download Scraper_6 JSON (ZIP)",
+#                 data=zip_buffer_6.getvalue(),
+#                 file_name="scraper_6_json.zip",
+#                 mime="application/zip"
+#             )
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import streamlit as st
 import os
 import time
@@ -4647,7 +5129,7 @@ import zipfile
 
 # Import your scrapers
 from scrapers.scraper_1 import run_scraper_1
-from scrapers.scraper_2 import run_scraper_2
+# from scrapers.scraper_2 import run_scraper_2  # COMMENTED OUT to remove Scraper 2
 from scrapers.scraper_3 import run_scraper_3
 from scrapers.scraper_4 import run_scraper_4
 from scrapers.scraper_5 import run_scraper_5
@@ -4717,8 +5199,8 @@ def main():
     # We store results/durations for each scraper plus a flag if they've run
     if "scraper_1_results" not in st.session_state:
         st.session_state["scraper_1_results"] = None
-    if "scraper_2_results" not in st.session_state:
-        st.session_state["scraper_2_results"] = None
+    # if "scraper_2_results" not in st.session_state:
+    #     st.session_state["scraper_2_results"] = None
     if "scraper_3_results" not in st.session_state:
         st.session_state["scraper_3_results"] = None
     if "scraper_4_results" not in st.session_state:
@@ -4730,8 +5212,8 @@ def main():
 
     if "scraper_1_duration" not in st.session_state:
         st.session_state["scraper_1_duration"] = 0.0
-    if "scraper_2_duration" not in st.session_state:
-        st.session_state["scraper_2_duration"] = 0.0
+    # if "scraper_2_duration" not in st.session_state:
+    #     st.session_state["scraper_2_duration"] = 0.0
     if "scraper_3_duration" not in st.session_state:
         st.session_state["scraper_3_duration"] = 0.0
     if "scraper_4_duration" not in st.session_state:
@@ -4814,14 +5296,14 @@ def main():
         run_all = st.checkbox("Run ALL scrapers (default)", value=True)
         if run_all:
             scraper_1_selected = True
-            scraper_2_selected = True
+            # scraper_2_selected = True  # COMMENTED OUT
             scraper_3_selected = True
             scraper_4_selected = True
             scraper_5_selected = True
             scraper_6_selected = True
         else:
             scraper_1_selected = st.checkbox("Scraper 1 (Requests-based)", value=False)
-            scraper_2_selected = st.checkbox("Scraper 2 (JS-rendered HTML)", value=False)
+            # scraper_2_selected = st.checkbox("Scraper 2 (JS-rendered HTML)", value=False)  # COMMENTED OUT
             scraper_3_selected = st.checkbox("Scraper 3 (PDF, Page.printToPDF)", value=False)
             scraper_4_selected = st.checkbox("Scraper 4 (PDF_2, print_page)", value=False)
             scraper_5_selected = st.checkbox("Scraper 5 (Async crawler, aiohttp)", value=False)
@@ -4848,12 +5330,12 @@ def main():
                     end_time_1 = time.time()
                     st.session_state["scraper_1_duration"] = end_time_1 - start_time_1
 
-                # --- Scraper 2 ---
-                if scraper_2_selected:
-                    start_time_2 = time.time()
-                    st.session_state["scraper_2_results"] = run_scraper_2(urls, folder_path)
-                    end_time_2 = time.time()
-                    st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
+                # --- Scraper 2 (COMMENTED OUT) ---
+                # if scraper_2_selected:
+                #     start_time_2 = time.time()
+                #     st.session_state["scraper_2_results"] = run_scraper_2(urls, folder_path)
+                #     end_time_2 = time.time()
+                #     st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
 
                 # --- Scraper 3 ---
                 if scraper_3_selected:
@@ -4922,33 +5404,33 @@ def main():
                 scraper_label="Scraper_1"
             )
 
-        # ---------------- SCRAPER 2 ----------------
-        if st.session_state["scraper_2_results"] is not None:
-            results_2 = st.session_state["scraper_2_results"]
-            st.markdown("## Scraper 2 Results (JS-rendered HTML)")
-
-            success_count_2 = sum(r["status"] == "success" for r in results_2)
-            fail_count_2 = sum(r["status"] == "failed" for r in results_2)
-            time_taken_2 = st.session_state.get("scraper_2_duration", 0.0)
-
-            st.success(
-                f"Scraper 2 completed. Successfully scraped {success_count_2} of {len(results_2)} URLs. "
-                f"({fail_count_2} failed.)\n"
-                f"**Time Taken**: {time_taken_2:.2f} seconds."
-            )
-
-            with st.expander("Detailed Results (Scraper 2)"):
-                for item in results_2:
-                    status_emoji = "✅" if item["status"] == "success" else "❌"
-                    error_text = f"**Error**: {item['error']}" if item['error'] else ""
-                    st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
-
-            create_zip_and_download(
-                results_2,
-                folder_path=folder_path,
-                subfolder_name="2_Rendered_HTML_saved_webpages",
-                scraper_label="Scraper_2"
-            )
+        # ---------------- SCRAPER 2 (COMMENTED OUT) ----------------
+        # if st.session_state["scraper_2_results"] is not None:
+        #     results_2 = st.session_state["scraper_2_results"]
+        #     st.markdown("## Scraper 2 Results (JS-rendered HTML)")
+        #
+        #     success_count_2 = sum(r["status"] == "success" for r in results_2)
+        #     fail_count_2 = sum(r["status"] == "failed" for r in results_2)
+        #     time_taken_2 = st.session_state.get("scraper_2_duration", 0.0)
+        #
+        #     st.success(
+        #         f"Scraper 2 completed. Successfully scraped {success_count_2} of {len(results_2)} URLs. "
+        #         f"({fail_count_2} failed.)\n"
+        #         f'**Time Taken**: {time_taken_2:.2f} seconds.'
+        #     )
+        #
+        #     with st.expander("Detailed Results (Scraper 2)"):
+        #         for item in results_2:
+        #             status_emoji = "✅" if item["status"] == "success" else "❌"
+        #             error_text = f"**Error**: {item["error"]}' if item['error'] else ""
+        #             st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+        #
+        #     create_zip_and_download(
+        #         results_2,
+        #         folder_path=folder_path,
+        #         subfolder_name="2_Rendered_HTML_saved_webpages",
+        #         scraper_label="Scraper_2"
+        #     )
 
         # ---------------- SCRAPER 3 ----------------
         if st.session_state["scraper_3_results"] is not None:
@@ -5094,14 +5576,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
 
 
 
