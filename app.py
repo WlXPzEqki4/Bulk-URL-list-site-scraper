@@ -6566,8 +6566,8 @@ import zipfile
 # Import your scrapers
 from scrapers.scraper_1 import run_scraper_1
 # from scrapers.scraper_2 import run_scraper_2  # COMMENTED OUT Scraper 2
-from scrapers.scraper_3 import run_scraper_3  # COMMENTED OUT Scraper 3
-from scrapers.scraper_4 import run_scraper_4  # COMMENTED OUT Scraper 4
+# from scrapers.scraper_3 import run_scraper_3  # COMMENTED OUT Scraper 3
+# from scrapers.scraper_4 import run_scraper_4  # COMMENTED OUT Scraper 4
 from scrapers.scraper_5 import run_scraper_5
 from scrapers.scraper_6 import run_scraper_6  # BeautifulSoup JSON
 
@@ -6636,10 +6636,10 @@ def main():
         st.session_state["scraper_1_results"] = None
     # if "scraper_2_results" not in st.session_state:
     #     st.session_state["scraper_2_results"] = None
-    if "scraper_3_results" not in st.session_state:
-        st.session_state["scraper_3_results"] = None
-    if "scraper_4_results" not in st.session_state:
-        st.session_state["scraper_4_results"] = None
+    # if "scraper_3_results" not in st.session_state:
+    #     st.session_state["scraper_3_results"] = None
+    # if "scraper_4_results" not in st.session_state:
+    #     st.session_state["scraper_4_results"] = None
     if "scraper_5_results" not in st.session_state:
         st.session_state["scraper_5_results"] = None
     if "scraper_6_results" not in st.session_state:
@@ -6649,10 +6649,10 @@ def main():
         st.session_state["scraper_1_duration"] = 0.0
     # if "scraper_2_duration" not in st.session_state:
     #     st.session_state["scraper_2_duration"] = 0.0
-    if "scraper_3_duration" not in st.session_state:
-        st.session_state["scraper_3_duration"] = 0.0
-    if "scraper_4_duration" not in st.session_state:
-        st.session_state["scraper_4_duration"] = 0.0
+    # if "scraper_3_duration" not in st.session_state:
+    #     st.session_state["scraper_3_duration"] = 0.0
+    # if "scraper_4_duration" not in st.session_state:
+    #     st.session_state["scraper_4_duration"] = 0.0
     if "scraper_5_duration" not in st.session_state:
         st.session_state["scraper_5_duration"] = 0.0
     if "scraper_6_duration" not in st.session_state:
@@ -6731,16 +6731,16 @@ def main():
         run_all = st.checkbox("Run ALL scrapers (default)", value=True)
         if run_all:
             scraper_1_selected = True
-            scraper_2_selected = True
-            scraper_3_selected = True
-            scraper_4_selected = True
+            # scraper_2_selected = True
+            # scraper_3_selected = True
+            # scraper_4_selected = True
             scraper_5_selected = True
             scraper_6_selected = True
         else:
             scraper_1_selected = st.checkbox("Scraper 1 (Requests-based)", value=False)
-            scraper_2_selected = st.checkbox("Scraper 2 (JS-rendered HTML)", value=False)
-            scraper_3_selected = st.checkbox("Scraper 3 (PDF, Page.printToPDF)", value=False)
-            scraper_4_selected = st.checkbox("Scraper 4 (PDF_2, print_page)", value=False)
+            # scraper_2_selected = st.checkbox("Scraper 2 (JS-rendered HTML)", value=False)
+            # scraper_3_selected = st.checkbox("Scraper 3 (PDF, Page.printToPDF)", value=False)
+            # scraper_4_selected = st.checkbox("Scraper 4 (PDF_2, print_page)", value=False)
             scraper_5_selected = st.checkbox("Scraper 5 (Async crawler, aiohttp)", value=False)
             scraper_6_selected = st.checkbox("Scraper 6 (BeautifulSoup to JSON)", value=False)
 
@@ -6773,18 +6773,18 @@ def main():
                 #     st.session_state["scraper_2_duration"] = end_time_2 - start_time_2
 
                 # --- Scraper 3 (COMMENTED OUT) ---
-                if scraper_3_selected:
-                    start_time_3 = time.time()
-                    st.session_state["scraper_3_results"] = run_scraper_3(urls, folder_path)
-                    end_time_3 = time.time()
-                    st.session_state["scraper_3_duration"] = end_time_3 - start_time_3
+                # if scraper_3_selected:
+                #     start_time_3 = time.time()
+                #     st.session_state["scraper_3_results"] = run_scraper_3(urls, folder_path)
+                #     end_time_3 = time.time()
+                #     st.session_state["scraper_3_duration"] = end_time_3 - start_time_3
 
                 # --- Scraper 4 (COMMENTED OUT) ---
-                if scraper_4_selected:
-                    start_time_4 = time.time()
-                    st.session_state["scraper_4_results"] = run_scraper_4(urls, folder_path)
-                    end_time_4 = time.time()
-                    st.session_state["scraper_4_duration"] = end_time_4 - start_time_4
+                # if scraper_4_selected:
+                #     start_time_4 = time.time()
+                #     st.session_state["scraper_4_results"] = run_scraper_4(urls, folder_path)
+                #     end_time_4 = time.time()
+                #     st.session_state["scraper_4_duration"] = end_time_4 - start_time_4
 
                 # --- Scraper 5 ---
                 if scraper_5_selected:
@@ -6868,80 +6868,80 @@ def main():
         #     )
 
         # ---------------- SCRAPER 3 (COMMENTED OUT) ----------------
-        if st.session_state["scraper_3_results"] is not None:
-            results_3 = st.session_state["scraper_3_results"]
-            st.markdown("## Scraper 3 Results (PDF, Page.printToPDF)")
+        # if st.session_state["scraper_3_results"] is not None:
+        #     results_3 = st.session_state["scraper_3_results"]
+        #     st.markdown("## Scraper 3 Results (PDF, Page.printToPDF)")
         
-            success_count_3 = sum(r["status"] == "success" for r in results_3)
-            fail_count_3 = sum(r["status"] == "failed" for r in results_3)
-            time_taken_3 = st.session_state.get("scraper_3_duration", 0.0)
+        #     success_count_3 = sum(r["status"] == "success" for r in results_3)
+        #     fail_count_3 = sum(r["status"] == "failed" for r in results_3)
+        #     time_taken_3 = st.session_state.get("scraper_3_duration", 0.0)
         
-            st.success(
-                f"Scraper 3 completed. Successfully scraped {success_count_3} of {len(results_3)} URLs. "
-                f"({fail_count_3} failed.)\n"
-                f"**Time Taken**: {time_taken_3:.2f} seconds."
-            )
+        #     st.success(
+        #         f"Scraper 3 completed. Successfully scraped {success_count_3} of {len(results_3)} URLs. "
+        #         f"({fail_count_3} failed.)\n"
+        #         f"**Time Taken**: {time_taken_3:.2f} seconds."
+        #     )
         
-            with st.expander("Detailed Results (Scraper 3)"):
-                for item in results_3:
-                    status_emoji = "✅" if item["status"] == "success" else "❌"
-                    error_text = f"**Error**: {item['error']}" if item['error'] else ""
-                    st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+        #     with st.expander("Detailed Results (Scraper 3)"):
+        #         for item in results_3:
+        #             status_emoji = "✅" if item["status"] == "success" else "❌"
+        #             error_text = f"**Error**: {item['error']}" if item['error'] else ""
+        #             st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
         
-            # ZIP Download for PDF subfolder "3_PDF_1"
-            zip_buffer_3 = BytesIO()
-            with zipfile.ZipFile(zip_buffer_3, "w") as zf:
-                for item in results_3:
-                    if item["status"] == "success" and item["filename"]:
-                        pdf_path = os.path.join(folder_path, "3_PDF_1", item["filename"])
-                        if os.path.exists(pdf_path):
-                            zf.write(pdf_path, arcname=item["filename"])
-            zip_buffer_3.seek(0)
+        #     # ZIP Download for PDF subfolder "3_PDF_1"
+        #     zip_buffer_3 = BytesIO()
+        #     with zipfile.ZipFile(zip_buffer_3, "w") as zf:
+        #         for item in results_3:
+        #             if item["status"] == "success" and item["filename"]:
+        #                 pdf_path = os.path.join(folder_path, "3_PDF_1", item["filename"])
+        #                 if os.path.exists(pdf_path):
+        #                     zf.write(pdf_path, arcname=item["filename"])
+        #     zip_buffer_3.seek(0)
         
-            st.download_button(
-                label="Download Scraper_3 PDFs (ZIP)",
-                data=zip_buffer_3.getvalue(),
-                file_name="scraper_3_pdfs.zip",
-                mime="application/zip"
-            )
+        #     st.download_button(
+        #         label="Download Scraper_3 PDFs (ZIP)",
+        #         data=zip_buffer_3.getvalue(),
+        #         file_name="scraper_3_pdfs.zip",
+        #         mime="application/zip"
+        #     )
 
         # ---------------- SCRAPER 4 (COMMENTED OUT) ----------------
-        if st.session_state["scraper_4_results"] is not None:
-            results_4 = st.session_state["scraper_4_results"]
-            st.markdown("## Scraper 4 Results (PDF_2, print_page())")
+        # if st.session_state["scraper_4_results"] is not None:
+        #     results_4 = st.session_state["scraper_4_results"]
+        #     st.markdown("## Scraper 4 Results (PDF_2, print_page())")
         
-            success_count_4 = sum(r["status"] == "success" for r in results_4)
-            fail_count_4 = sum(r["status"] == "failed" for r in results_4)
-            time_taken_4 = st.session_state.get("scraper_4_duration", 0.0)
+        #     success_count_4 = sum(r["status"] == "success" for r in results_4)
+        #     fail_count_4 = sum(r["status"] == "failed" for r in results_4)
+        #     time_taken_4 = st.session_state.get("scraper_4_duration", 0.0)
         
-            st.success(
-                f"Scraper 4 completed. Successfully scraped {success_count_4} of {len(results_4)} URLs. "
-                f"({fail_count_4} failed.)\n"
-                f"**Time Taken**: {time_taken_4:.2f} seconds."
-            )
+        #     st.success(
+        #         f"Scraper 4 completed. Successfully scraped {success_count_4} of {len(results_4)} URLs. "
+        #         f"({fail_count_4} failed.)\n"
+        #         f"**Time Taken**: {time_taken_4:.2f} seconds."
+        #     )
         
-            with st.expander("Detailed Results (Scraper 4)"):
-                for item in results_4:
-                    status_emoji = "✅" if item["status"] == "success" else "❌"
-                    error_text = f"**Error**: {item['error']}" if item['error'] else ""
-                    st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
+        #     with st.expander("Detailed Results (Scraper 4)"):
+        #         for item in results_4:
+        #             status_emoji = "✅" if item["status"] == "success" else "❌"
+        #             error_text = f"**Error**: {item['error']}" if item['error'] else ""
+        #             st.write(f"{status_emoji} {item['url']} -> {item['filename'] or 'No file'} {error_text}")
         
-            # ZIP Download of PDF subfolder "4_PDF_2"
-            zip_buffer_4 = BytesIO()
-            with zipfile.ZipFile(zip_buffer_4, "w") as zf:
-                for item in results_4:
-                    if item["status"] == "success" and item["filename"]:
-                        pdf_path = os.path.join(folder_path, "4_PDF_2", item["filename"])
-                        if os.path.exists(pdf_path):
-                            zf.write(pdf_path, arcname=item["filename"])
-            zip_buffer_4.seek(0)
+        #     # ZIP Download of PDF subfolder "4_PDF_2"
+        #     zip_buffer_4 = BytesIO()
+        #     with zipfile.ZipFile(zip_buffer_4, "w") as zf:
+        #         for item in results_4:
+        #             if item["status"] == "success" and item["filename"]:
+        #                 pdf_path = os.path.join(folder_path, "4_PDF_2", item["filename"])
+        #                 if os.path.exists(pdf_path):
+        #                     zf.write(pdf_path, arcname=item["filename"])
+        #     zip_buffer_4.seek(0)
         
-            st.download_button(
-                label="Download Scraper_4 PDFs (ZIP)",
-                data=zip_buffer_4.getvalue(),
-                file_name="scraper_4_pdfs.zip",
-                mime="application/zip"
-            )
+        #     st.download_button(
+        #         label="Download Scraper_4 PDFs (ZIP)",
+        #         data=zip_buffer_4.getvalue(),
+        #         file_name="scraper_4_pdfs.zip",
+        #         mime="application/zip"
+        #     )
 
         # ---------------- SCRAPER 5 ----------------
         if st.session_state["scraper_5_results"] is not None:
