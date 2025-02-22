@@ -17,4 +17,22 @@ streamlit run app.py
 
 
 
+git init
+
+git add .
+
+git commit -m "Initial commit"
+
+
+git remote add origin https://github.com/WlXPzEqki4/Bulk-URL-list-site-scraper.git
+
+git push -u origin main
+
+
+
+
+
+
+
+
 
